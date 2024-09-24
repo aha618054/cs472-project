@@ -7,6 +7,7 @@ import { validateInputParams } from "../../utils/validation/handle-validation";
 import { ValidatorType } from "../../models/enums/validator-type.enum";
 import { Post } from "../../models/post/post.model";
 import { StatusCodes } from "../../models/enums/status.enum";
+import { User } from "../../models/post/user.model";
 
 /**
  * Add new post by Date
@@ -22,6 +23,7 @@ export const addPostHandler: RequestHandler<
         title: string;
         body: string;
         date: string;
+        user: User
     },
     unknown
 > = (req, res, next) => {
@@ -82,6 +84,7 @@ export const addPostHandler: RequestHandler<
             title: req.body.title,
             body: req.body.body,
             vote: 0,
+            user: req.body.user
         };
 
         postService.addPost(post);

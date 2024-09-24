@@ -16,7 +16,7 @@ export class PostService {
                 this.fullFilePath,
                 "utf-8"
             );
-            this.posts = JSON.parse(fileContent);
+            this.posts = [...JSON.parse(fileContent)];
         } catch (error) {
             errorLogStream.write(`${error.message}\n`);
             this.posts = [];
@@ -54,6 +54,7 @@ export class PostService {
 
     addPost = (post: Post): Post => {
         this.posts = [...this.posts, post];
+        console.log(this.posts)
         this.persist();
         return post;
     };
@@ -79,4 +80,8 @@ export class PostService {
         this.persist();
         return post;
     };
+
+    deletePostById = (id: string) => {
+        
+    }
 }
