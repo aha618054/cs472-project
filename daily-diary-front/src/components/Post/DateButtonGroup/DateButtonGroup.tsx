@@ -32,6 +32,7 @@ export default function DateButtonGroup() {
                     Next
                 </Button>
             </ButtonGroup>
+            
             <Button
                 component={Link}
                 to="/posts/add"
@@ -41,6 +42,7 @@ export default function DateButtonGroup() {
             >
                 Add
             </Button>
+           
         </Box>
     );
 }

@@ -18,6 +18,8 @@ import { Post } from "../../../models/Post";
 import { GlobalContext } from "../../../contexts/PostsContext";
 import { isToday } from "date-fns";
 import { convertDateToFormat } from "../../../utils/utils";
+import DeleteIcon from '@mui/icons-material/Delete'
+import { PostService } from "../../../services/post/postService";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -39,6 +41,11 @@ export default function PostItem({ post }: { post: Post }) {
         setExpanded(!expanded);
     };
 
+    const handleDelete = (id: string,searchDate : Date) => {
+        const postService = new PostService();
+        postService.deletePostById(id,convertDateToFormat(searchDate,"MM-dd-yyyy"));  
+    }
+
     return (
         <Card variant="outlined" sx={{ mt: 2, mb: 2 }}>
             <CardHeader
@@ -46,6 +53,11 @@ export default function PostItem({ post }: { post: Post }) {
                     isToday(searchDate)
                         ? "Today"
                         : convertDateToFormat(searchDate, "MMMM dd, yyyy")
+                }
+                action={
+                    <IconButton onClick={() => handleDelete(post.id,searchDate)} aria-label="delete">                        
+                            <DeleteIcon />
+                    </IconButton>
                 }
             ></CardHeader>
             <CardMedia
