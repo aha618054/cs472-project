@@ -90,6 +90,32 @@ export const addPostHandler: RequestHandler<
         next(error);
     }
 };
+/*
+delete Post By Id and file name by date 
+*/
+
+export const deletePostByIdHandler: RequestHandler<
+    { id: string,date : string },
+    unknown,
+    unknown,
+    unknown
+> = (req, res, next) => {
+    try {
+        // get post by ID and response data
+      //  const postService = new PostService(req.params.date);      
+        const postService = new PostService(
+            generateDataFilenameByDate(req.params.date)
+        );
+  
+         postService.deletePostById(req.params.id,req.params.date);        
+        res.status(StatusCodes.SUCCESS).json(
+            postService.getAllPosts()
+        );
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 /**
  * Get all posts by Date
