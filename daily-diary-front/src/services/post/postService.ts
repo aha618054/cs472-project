@@ -36,7 +36,7 @@ export class PostService extends APIService {
         return await response.json();
     };
 
-    deletePostById = async (id: string, date: string): Promise<Post> => {
+    deletePostById = async (id: string,date: string): Promise<Post> => {
         const url: string = `${this.getBaseUrl()}/posts/delete/${id}/${date}`;    
         const response: Response = await this.deleteData(url);
         if (response.status !== StatusCode.SUCCESS) {

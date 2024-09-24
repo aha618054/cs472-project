@@ -8,7 +8,7 @@ type StateType = {
     isVoted: boolean;
     isAddedNew: boolean;
     loading: boolean;
-    notify: Notify;
+    notify: Notify;    
 };
 
 type Notify = {
@@ -22,7 +22,7 @@ const initStateValue = {
     isVoted: false,
     isAddedNew: false,
     loading: false,
-    notify: { status: "success" as AlertColor, message: "" },
+    notify: { status: "success" as AlertColor, message: "" },   
 };
 
 export type ContextType = {
@@ -34,13 +34,13 @@ export type ContextType = {
     notify: {
         status: AlertColor;
         message: string;
-    };
+    };  
     updatePosts: Function;
     updateSearchDate: Function;
     updateIsVoted: Function;
     updateIsAddedNew: Function;
     updateLoading: Function;
-    updateNotify: Function;
+    updateNotify: Function;   
 };
 
 const initContextValue = {
@@ -50,7 +50,7 @@ const initContextValue = {
     updateIsVoted: (isVoted: boolean) => {},
     updateIsAddedNew: (isVoted: boolean) => {},
     updateLoading: (loading: boolean) => {},
-    updateNotify: (notify: Notify) => {},
+    updateNotify: (notify: Notify) => {},  
 };
 
 export const GlobalContext = createContext(initContextValue);
@@ -81,13 +81,15 @@ export function PostsContext({ children }: { children: ReactNode }) {
     const updateNotify = (notify: Notify) => {
         setState((prev) => ({ ...prev, notify }));
     };
+    
+  
 
     return (
         <GlobalContext.Provider
             value={{
                 posts: state.posts,
                 searchDate: state.searchDate,
-                isVoted: state.isVoted,
+                isVoted: state.isVoted,                
                 isAddedNew: state.isAddedNew,
                 loading: state.loading,
                 notify: state.notify,
@@ -96,7 +98,7 @@ export function PostsContext({ children }: { children: ReactNode }) {
                 updateIsVoted,
                 updateIsAddedNew,
                 updateLoading,
-                updateNotify,
+                updateNotify,            
             }}
         >
             {children}

@@ -15,11 +15,13 @@ import styled from "@emotion/styled";
 import diaryJpg from "../../../assets/images/diary.jpg";
 import Votes from "../Votes/Votes";
 import { Post } from "../../../models/Post";
+import { Link, useNavigate } from "react-router-dom";
 import { GlobalContext } from "../../../contexts/PostsContext";
 import { isToday } from "date-fns";
 import { convertDateToFormat } from "../../../utils/utils";
 import DeleteIcon from '@mui/icons-material/Delete'
 import { PostService } from "../../../services/post/postService";
+import { CustomError } from "../../../utils/customError";
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -34,17 +36,44 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }));
 
 export default function PostItem({ post }: { post: Post }) {
-    const { searchDate } = useContext(GlobalContext);
+    const { searchDate,updateIsAddedNew, updateLoading, updateNotify } = useContext(GlobalContext);
     const [expanded, setExpanded] = useState(false);
+    const navigate = useNavigate();
+   
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
 
-    const handleDelete = (id: string,searchDate : Date) => {
-        const postService = new PostService();
-        postService.deletePostById(id,convertDateToFormat(searchDate,"MM-dd-yyyy"));  
+    const handleDelete = (id: string,searchDate : Date) => {      
+       deletePostById(id,convertDateToFormat(searchDate,"MM-dd-yyyy"));
     }
+   
+    const deletePostById = async (id: string,searchDate:string) => {
+        try {
+            updateLoading(true);
+            const postService = new PostService();
+            postService.deletePostById(id,searchDate);                
+            updateIsAddedNew(true);
+            updateLoading(false);
+            updateNotify({
+                status: "success",
+                message: "Delete post successfully",
+            });
+            navigate("/posts");
+        } catch (error) {
+            let errMsg: string = "Unknow error";
+            if (error instanceof CustomError) {
+                errMsg = error.message;
+            }
+
+            updateLoading(false);
+            updateNotify({
+                status: "error",
+                message: errMsg,
+            });
+        }
+    };
 
     return (
         <Card variant="outlined" sx={{ mt: 2, mb: 2 }}>

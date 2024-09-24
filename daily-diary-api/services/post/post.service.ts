@@ -21,8 +21,7 @@ export class PostService {
         } catch (error) {
             errorLogStream.write(`File Read Error ${error.message}\n`);
             this.posts = [];
-        }
-        
+        }        
     }
 
     persist = (): void => {
@@ -61,42 +60,17 @@ export class PostService {
         return post;
     };
 
-    deletePostById = (id: string,date :string): void => {     
-        const filename =`Posts_${date}.json`;
-        errorLogStream.write('File name '+filename)
-        if( id.length>0 && date.length > 0 ){
-            const postService = new PostService(
-                generateDataFilenameByDate(date)
-            );      
-    
-            let postByDate: Post[] = postService.getAllPosts();
-          //  errorLogStream.write(`All the posts ${JSON.stringify(allPosts)}\n`);
-            let postIndex = postByDate.findIndex(p => p.id === id);          
-            let fullFilePath = join(__dirname, "../../data", filename);   
-            errorLogStream.write("full FilePath" + fullFilePath);
-            if (postIndex >= 0) {            
-                try {                
-                  
-                  postByDate.splice(postIndex,1); 
-                  writeFileSync(fullFilePath, JSON.stringify(postByDate));
-    
-                } catch (error) {
-                    errorLogStream.write(`${error.message}\n`);
-                    throw new CustomError(
-                        StatusCodes.SERVER_ERROR,
-                        `Cannot write json file: ${this.filename}`,
-                        error.message
-                    );
-                }                    
-            }else{
-    
-                errorLogStream.write(`Not able to delete post with id: ${id}\n`);
-                throw new CustomError(
-                    StatusCodes.NOT_FOUND,
-                    `Not able to delete with id: ${id}`
-                );
-            }
-        }        
+    deletePostById = (id: string,date :string): void => {  
+        const initialLength = this.posts.length;
+        this.posts = this.posts.filter(p=> p.id !== id)               
+        if(this.posts.length === initialLength){
+            errorLogStream.write(`Not able to delete the post with id: ${id}\n`);
+            throw new CustomError(
+                StatusCodes.NOT_FOUND,
+                `Not able to delete the post with id: ${id}`
+            );
+        }          
+        this.persist();     
     };
 
     votedPostById = (id: string, votes: number): Post | null => {
@@ -121,7 +95,4 @@ export class PostService {
         return post;
     };
 
-    deletePostById = (id: string) => {
-        
-    }
 }

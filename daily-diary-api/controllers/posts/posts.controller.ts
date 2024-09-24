@@ -8,6 +8,7 @@ import { ValidatorType } from "../../models/enums/validator-type.enum";
 import { Post } from "../../models/post/post.model";
 import { StatusCodes } from "../../models/enums/status.enum";
 import { User } from "../../models/post/user.model";
+import { errorLogStream } from "../../middlewares/middleware";
 
 /**
  * Add new post by Date
@@ -98,19 +99,19 @@ delete Post By Id and file name by date
 */
 
 export const deletePostByIdHandler: RequestHandler<
-    { id: string,date : string },
+    { id: string ,date : string},
     unknown,
     unknown,
-    unknown
+    {date :string}
 > = (req, res, next) => {
     try {
-        // get post by ID and response data
-      //  const postService = new PostService(req.params.date);      
+       
+       
         const postService = new PostService(
             generateDataFilenameByDate(req.params.date)
         );
-  
-         postService.deletePostById(req.params.id,req.params.date);        
+        errorLogStream.write("DateTime" +req.query.date)
+        postService.deletePostById(req.params.id,req.params.date);        
         res.status(StatusCodes.SUCCESS).json(
             postService.getAllPosts()
         );
