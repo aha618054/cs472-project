@@ -47,8 +47,8 @@ export class APIService {
 
     deleteData = (url: string): Promise<Response> => {
         return fetch(url, {
-            method: "GET",
-            headers: this.generateHeader(),
+            method: "DELETE",
+            headers: this.generateHeader(),        
         });
     };
 

@@ -10,7 +10,6 @@ export class PostService extends APIService {
             date: date,
         };
         const response: Response = await this.postData(url, requestBody);
-
         if (response.status !== StatusCode.CREATED) {
             await this.throwError(response);
         }
@@ -21,7 +20,6 @@ export class PostService extends APIService {
     getAllPosts = async (date: string): Promise<Post[]> => {
         const url: string = `${this.getBaseUrl()}/posts?date=${date}`;
         const response: Response = await this.getData(url);
-
         if (response.status !== StatusCode.SUCCESS) {
             await this.throwError(response);
         }
@@ -30,13 +28,20 @@ export class PostService extends APIService {
     };
 
     getPostById = async (id: string, date: string): Promise<Post> => {
-        const url: string = `${this.getBaseUrl()}/posts/${id}?date=${date}`;
+        const url: string = `${this.getBaseUrl()}/posts/${id}?date=${date}`;        
         const response: Response = await this.getData(url);
-
         if (response.status !== StatusCode.SUCCESS) {
             await this.throwError(response);
         }
+        return await response.json();
+    };
 
+    deletePostById = async (id: string, date: string): Promise<Post> => {
+        const url: string = `${this.getBaseUrl()}/posts/delete/${id}/${date}`;    
+        const response: Response = await this.deleteData(url);
+        if (response.status !== StatusCode.SUCCESS) {
+            await this.throwError(response);
+        }
         return await response.json();
     };
 
