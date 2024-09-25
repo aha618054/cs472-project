@@ -17,14 +17,14 @@ export default function PostPage() {
         posts,
         searchDate,
         isVoted,
-        isAddedNew,        
+        isAddedNew,
         updatePosts,
         updateLoading,
         updateNotify,
         updateIsVoted,
         updateIsAddedNew,
-        updateSearchDate,  
-       } = useContext(GlobalContext);
+        updateSearchDate,
+    } = useContext(GlobalContext);
 
     useEffect(() => {
         updateSearchDate(new Date());
@@ -49,6 +49,7 @@ export default function PostPage() {
             if (error instanceof CustomError) {
                 errorMsg = error.message;
             }
+
             updateLoading(false);
             updateNotify({
                 status: "error",

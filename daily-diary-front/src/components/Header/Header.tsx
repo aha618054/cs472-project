@@ -53,7 +53,7 @@ export default function Header() {
                             textDecoration: "none",
                         }}
                     >
-                        DIARY
+                        MEMORIES
                     </Typography>
                     <Box
                         sx={{
@@ -122,7 +122,7 @@ export default function Header() {
                             textDecoration: "none",
                         }}
                     >
-                        DIARY
+                        MEMORIES
                     </Typography>
                     <Box
                         sx={{

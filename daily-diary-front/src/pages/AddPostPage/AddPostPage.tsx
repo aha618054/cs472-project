@@ -94,8 +94,8 @@ export default function AddPostPage() {
                     body: postInputForm.description,
                     vote: 0,
                     user: {
-                        "uid": 102,
-                        "uname": "Jane Doe"
+                        uid: 102,
+                        uname: "John Doe"
                     }
                 }
             );
