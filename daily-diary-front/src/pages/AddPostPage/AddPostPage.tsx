@@ -93,6 +93,10 @@ export default function AddPostPage() {
                     title: postInputForm.title,
                     body: postInputForm.description,
                     vote: 0,
+                    user: {
+                        "uid": 102,
+                        "uname": "Jane Doe"
+                    }
                 }
             );
             updateIsAddedNew(true);

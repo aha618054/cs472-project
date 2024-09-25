@@ -3,4 +3,9 @@ export interface Post {
     title: string;
     body: string;
     vote: number;
+    user: User
+}
+type User = {
+    uid: number,
+    uname: string
 }

@@ -35,6 +35,11 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
     marginLeft: "auto",
 }));
 
+const currentUser = {
+    uid: 102,
+    uname: "John Doe"
+}
+
 export default function PostItem({ post }: { post: Post }) {
     const { searchDate,updateIsAddedNew, updateLoading, updateNotify } = useContext(GlobalContext);
     const [expanded, setExpanded] = useState(false);
@@ -84,10 +89,13 @@ export default function PostItem({ post }: { post: Post }) {
                         : convertDateToFormat(searchDate, "MMMM dd, yyyy")
                 }
                 action={
-                    <IconButton onClick={() => handleDelete(post.id,searchDate)} aria-label="delete">                        
+                    currentUser.uid === post.user.uid ? (
+                        <IconButton onClick={() => handleDelete(post.id, searchDate)} aria-label="delete">
                             <DeleteIcon />
-                    </IconButton>
+                        </IconButton>
+                    ) : null
                 }
+                
             ></CardHeader>
             <CardMedia
                 component="img"
