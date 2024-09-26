@@ -40,15 +40,16 @@ const Login = ({ onLogin } :LoginProps) => {
       ];
 
       const user = dummyUsers.find(
-        (u) => u.username === username && u.password === password
+        (u) => u.username.trim().toLowerCase() === username.trim().toLowerCase() && u.password === password
       );
 
     
       if (user) {     
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('loggedInUser', JSON.stringify(user));
-        localStorage.setItem('uname',user.username)
-        localStorage.setItem('uid',user.uid.toString())
+        sessionStorage.setItem('isAuthenticated', 'true');
+        sessionStorage.setItem('loggedInUser', JSON.stringify(user));
+        sessionStorage.setItem('uname',user.username)
+        sessionStorage.setItem('uid',user.uid.toString())
+       // console.log('login user id' + user.uid)
 
         onLogin(user);
       } else {

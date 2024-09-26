@@ -77,8 +77,7 @@ export const deletePostHandler: RequestHandler = (req, res, next) => {
     try {
         const date = req.query.date as string;
         const formattedDate = new Date(date).toISOString().split('T')[0];
-        const postService = new PostService(generateDataFilenameByDate(formattedDate));
-
+        const postService = new PostService(generateDataFilenameByDate(formattedDate));    
         postService.deletePostById(req.params.id, formattedDate);
         res.status(StatusCodes.SUCCESS).json({ message: "Post deleted successfully" });
     } catch (error) {
