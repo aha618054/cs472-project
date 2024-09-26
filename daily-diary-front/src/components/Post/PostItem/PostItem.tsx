@@ -24,12 +24,13 @@ interface PostItemProps {
 }
  
 const currentUser = {
-    uid: localStorage.getItem('uid') === null ? 0 : parseInt(localStorage.getItem('uid') as string, 10),
-    uname: localStorage.getItem('uname') || '' 
+    uid: sessionStorage.getItem('uid') === null ? 0 : parseInt(sessionStorage.getItem('uid') as string, 10),
+    uname: sessionStorage.getItem('uname') || '' 
 }
 
 export default function PostItem({ post, updatePost, deletePost }: PostItemProps) {
     const { searchDate } = useContext(GlobalContext);
+    const { uid } = useContext(GlobalContext);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(post.title);
     const [editedBody, setEditedBody] = useState(post.body);
@@ -53,9 +54,10 @@ export default function PostItem({ post, updatePost, deletePost }: PostItemProps
     };
  
     const handleDeleteClick = () => {
-        if (window.confirm("Are you sure you want to delete this post?")) {
-            deletePost(post.id);
-        }
+       // if (window.confirm("Are you sure you want to delete this post?")) {
+           
+      //  }
+        deletePost(post.id);
     };
  
     return (
@@ -65,7 +67,7 @@ export default function PostItem({ post, updatePost, deletePost }: PostItemProps
                 subheader={
                     `${isToday(searchDate)
                         ? "Today"
-                        : convertDateToFormat(new Date(searchDate), "MMMM dd, yyyy")}`
+                        : convertDateToFormat(new Date(searchDate), "MMMM dd, yyyy")} - written by : ${post.user.uname}`
                 }
             />
             <CardMedia
@@ -110,8 +112,10 @@ export default function PostItem({ post, updatePost, deletePost }: PostItemProps
             </CardContent>
             <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
                 <Votes post={post} /> {/* Voting component stays left-aligned */}
-                {!isEditing && currentUser.uid === post.user.uid && (
+                {/* <p>{uid} {post.user.uid}</p> */}
+                {!isEditing && uid === post.user.uid && (
                     <div>
+                        
                         <Button onClick={handleEditClick} variant="outlined" sx={{ ml: 2 }}>
                             Edit
                         </Button>
@@ -122,5 +126,5 @@ export default function PostItem({ post, updatePost, deletePost }: PostItemProps
                 )}
             </CardActions>
         </Card>
-    );
+    );  
 }

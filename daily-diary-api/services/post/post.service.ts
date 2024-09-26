@@ -4,7 +4,7 @@ import { CustomError } from "../../utils/custom-error";
 import { Post } from "../../models/post/post.model";
 import { StatusCodes } from "../../models/enums/status.enum";
 import { errorLogStream } from "../../middlewares/middleware";
-import { generateDataFilenameByDate } from "../../utils/utils";
+
 
 export class PostService {
     private posts: Post[] = [];
@@ -17,7 +17,7 @@ export class PostService {
                 this.fullFilePath,
                 "utf-8"
             );
-            this.posts = [...JSON.parse(fileContent)];
+            this.posts = [...JSON.parse(fileContent)];          
         } catch (error) {
             errorLogStream.write(`File Read Error ${error.message}\n`);
             this.posts = [];
@@ -54,14 +54,13 @@ export class PostService {
     };
 
     addPost = (post: Post): Post => {
-        this.posts = [...this.posts, post];
-    //    console.log(this.posts)
+        this.posts = [...this.posts, post];  
         this.persist();
         return post;
     };
 
     deletePostById = (id: string,date :string): void => {  
-        const initialLength = this.posts.length;
+        const initialLength = this.posts.length;   
         this.posts = this.posts.filter(p=> p.id !== id)               
         if(this.posts.length === initialLength){
             errorLogStream.write(`Not able to delete the post with id: ${id}\n`);
