@@ -55,7 +55,7 @@ export class PostService {
 
     addPost = (post: Post): Post => {
         this.posts = [...this.posts, post];
-        console.log(this.posts)
+    //    console.log(this.posts)
         this.persist();
         return post;
     };

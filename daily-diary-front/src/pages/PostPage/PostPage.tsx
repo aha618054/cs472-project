@@ -61,13 +61,13 @@ export default function PostPage() {
     return (
         <Container maxWidth="xl">
             <Card variant="outlined" sx={{ m: 2, p: 2 }}>
-                <CardHeader
-                    title={`List Posts (${
-                        isToday(searchDate)
-                            ? "Today"
-                            : convertDateToFormat(searchDate, "MMMM dd, yyyy")
-                    })`}
-                />
+            <CardHeader
+            title={`List Posts (${
+                isToday(searchDate)
+                    ? "Today"
+                    : convertDateToFormat(searchDate, "MMMM dd, yyyy")
+            }) - Current User: ${localStorage.getItem('uname') ? localStorage.getItem('uname') : ''}`}
+             />
                 <CardContent>
                     <DateButtonGroup />
                     {posts.length > 0 ? (

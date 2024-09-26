@@ -24,8 +24,8 @@ interface PostItemProps {
 }
  
 const currentUser = {
-    uid: 102,
-    uname: "John Doe"
+    uid: localStorage.getItem('uid') === null ? 0 : parseInt(localStorage.getItem('uid') as string, 10),
+    uname: localStorage.getItem('uname') || '' 
 }
 
 export default function PostItem({ post, updatePost, deletePost }: PostItemProps) {
@@ -60,11 +60,12 @@ export default function PostItem({ post, updatePost, deletePost }: PostItemProps
  
     return (
         <Card variant="outlined" sx={{ mt: 2, mb: 2 }}>
-            <CardHeader
+            <CardHeader              
+             
                 subheader={
-                    isToday(searchDate)
+                    `${isToday(searchDate)
                         ? "Today"
-                        : convertDateToFormat(new Date(searchDate), "MMMM dd, yyyy")
+                        : convertDateToFormat(new Date(searchDate), "MMMM dd, yyyy")}`
                 }
             />
             <CardMedia
