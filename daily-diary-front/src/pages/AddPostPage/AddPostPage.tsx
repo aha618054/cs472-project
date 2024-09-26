@@ -94,8 +94,8 @@ export default function AddPostPage() {
                     body: postInputForm.description,
                     vote: 0,
                     user: {
-                        uid: localStorage.getItem('uid') === null ? 0 : parseInt(localStorage.getItem('uid') as string, 10),
-                        uname: localStorage.getItem('uname') || ''
+                        uid: sessionStorage.getItem('uid') === null ? 0 : parseInt(sessionStorage.getItem('uid') as string, 10),
+                        uname: sessionStorage.getItem('uname') || ''
                     }
                 }
             );

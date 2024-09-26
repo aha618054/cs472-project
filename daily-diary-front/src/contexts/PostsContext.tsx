@@ -9,6 +9,7 @@ type StateType = {
     isAddedNew: boolean;
     loading: boolean;
     notify: Notify;
+    uid : number;    
 };
 
 type Notify = {
@@ -23,6 +24,7 @@ const initStateValue = {
     isAddedNew: false,
     loading: false,
     notify: { status: "success" as AlertColor, message: "" },
+    uid : 0,
 };
 
 export type ContextType = {
@@ -32,6 +34,7 @@ export type ContextType = {
     isAddedNew: boolean;
     loading: boolean;
     notify: Notify;
+    uid : number;
     updatePosts: (posts: Post[]) => void;
     updateSearchDate: (searchDate: Date) => void;
     updateIsVoted: (isVoted: boolean) => void;
@@ -39,7 +42,8 @@ export type ContextType = {
     updateLoading: (loading: boolean) => void;
     updateNotify: (notify: Notify) => void;
     updatePost: (id: string, updatedData: { title: string; body: string }) => void;
-    deletePost: (id: string) => void; // Added deletePost type
+    deletePost: (id: string) => void; // Added deletePost type     
+    updateUserId: (uid: number) => void; 
 };
 
 const initContextValue: ContextType = {
@@ -52,6 +56,7 @@ const initContextValue: ContextType = {
     updateNotify: () => {},
     updatePost: () => {},
     deletePost: () => {}, // Added deletePost initialization
+    updateUserId: () => {},
 };
 
 export const GlobalContext = createContext(initContextValue);
@@ -82,6 +87,11 @@ export function PostsContext({ children }: { children: ReactNode }) {
     const updateNotify = (notify: Notify) => {
         setState((prev) => ({ ...prev, notify }));
     };
+
+    const updateUserId = (uid: number) => {
+        setState((prev) => ({ ...prev, uid }));
+    };
+
 
     // Function to update a post
     const updatePost = (id: string, updatedData: { title: string; body: string }) => {
@@ -116,6 +126,7 @@ export function PostsContext({ children }: { children: ReactNode }) {
 
     // Function to delete a post
     const deletePost = (id: string) => {
+        //console.log(id +'Search Date' +state.searchDate.toISOString().split('T')[0])
         fetch(`http://localhost:8080/api/posts/${id}?date=${state.searchDate.toISOString().split('T')[0]}`, {
             method: "DELETE",
         })
@@ -147,6 +158,7 @@ export function PostsContext({ children }: { children: ReactNode }) {
                 isAddedNew: state.isAddedNew,
                 loading: state.loading,
                 notify: state.notify,
+                uid: state.uid,
                 updatePosts,
                 updateSearchDate,
                 updateIsVoted,
@@ -155,6 +167,7 @@ export function PostsContext({ children }: { children: ReactNode }) {
                 updateNotify,
                 updatePost, 
                 deletePost, // Provide the deletePost function in the context
+                updateUserId,
             }}
         >
             {children}

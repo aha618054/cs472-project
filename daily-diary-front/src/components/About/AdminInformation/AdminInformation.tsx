@@ -5,22 +5,22 @@ export default function AdminInformation() {
         <>
             <div>
                 <Typography component="span">
-                    <strong>Student Name: </strong> Van Nhat Le
+                    <strong>Student Name: </strong> John Doe
                 </Typography>
             </div>
             <div>
                 <Typography component="span">
-                    <strong>Student ID: </strong> 618071
+                    <strong>Student ID: </strong> 617778
                 </Typography>
             </div>
             <div>
                 <Typography component="span">
-                    <strong>Phone: </strong> [641]-233-1984
+                    <strong>Phone: </strong> [641]-233-9999
                 </Typography>
             </div>
             <div>
                 <Typography component="span">
-                    <strong>Email: </strong> vle@miu.edu
+                    <strong>Email: </strong> jhd@miu.edu
                 </Typography>
             </div>
         </>

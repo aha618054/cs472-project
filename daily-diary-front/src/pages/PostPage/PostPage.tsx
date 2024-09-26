@@ -18,12 +18,14 @@ export default function PostPage() {
         searchDate,
         isVoted,
         isAddedNew,
+      //  uid,
         updatePosts,
         updateLoading,
         updateNotify,
         updateIsVoted,
         updateIsAddedNew,
         updateSearchDate,
+        updateUserId,
     } = useContext(GlobalContext);
 
     useEffect(() => {
@@ -35,9 +37,11 @@ export default function PostPage() {
     }, [searchDate, isVoted, isAddedNew]);
 
     const fetchPosts = async () => {
+        const currntUserId= sessionStorage.getItem('uid') === null ? 0 : parseInt(sessionStorage.getItem('uid') as string, 10);
         updateLoading(true);
         updateIsVoted(false);
         updateIsAddedNew(false);
+        updateUserId(currntUserId);
         try {
             const posts: Post[] = await postService.getAllPosts(
                 convertDateToFormat(searchDate, "MM-dd-yyyy")
@@ -66,7 +70,7 @@ export default function PostPage() {
                 isToday(searchDate)
                     ? "Today"
                     : convertDateToFormat(searchDate, "MMMM dd, yyyy")
-            }) - Current User: ${localStorage.getItem('uname') ? localStorage.getItem('uname') : ''}`}
+            }) - Current User: ${sessionStorage.getItem('uname') ? sessionStorage.getItem('uname')   : ''}`}
              />
                 <CardContent>
                     <DateButtonGroup />

@@ -15,8 +15,8 @@ function App() {
     const [currentUser, setCurrentUser] = useState<{ username: string; name: string } | null>(null);
 
     useEffect(() => {
-        const authStatus = localStorage.getItem('isAuthenticated');
-        const loggedInUser = localStorage.getItem('loggedInUser');        
+      const authStatus = sessionStorage.getItem('isAuthenticated');
+      const loggedInUser = sessionStorage.getItem('loggedInUser');
         
         if (authStatus === 'true' && loggedInUser) {
           setIsAuthenticated(true);
@@ -26,10 +26,10 @@ function App() {
   
 
       const handleLogout = () => {
-        localStorage.removeItem('isAuthenticated');
-        localStorage.removeItem('loggedInUser');
-        localStorage.removeItem('uname')
-        localStorage.removeItem('uid')
+        sessionStorage.removeItem('isAuthenticated');
+        sessionStorage.removeItem('loggedInUser');
+        sessionStorage.removeItem('uname')
+        sessionStorage.removeItem('uid')
 
         setIsAuthenticated(false);
         setCurrentUser(null);
