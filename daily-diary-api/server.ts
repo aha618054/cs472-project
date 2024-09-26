@@ -12,12 +12,17 @@ const server = express();
 // configuration
 server.use(cors());
 
+// Add JSON parsing middleware
+server.use(express.json());
+
 // middleware
 server.use(logRequest);
+
+// routers
 server.use("/api/posts", postRouter);
 server.use("/api/inquiries", inquiryRouter);
 
-// routers
+// Handle 404 for all unmatched routes
 server.all("*", notFoundRouteHandler);
 
 // error handlers

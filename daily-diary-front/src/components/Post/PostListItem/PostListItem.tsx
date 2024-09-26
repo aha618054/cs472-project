@@ -3,12 +3,12 @@ import PostItem from "../PostItem/PostItem";
 import { GlobalContext } from "../../../contexts/PostsContext";
 
 export default function PostListItem() {
-    const { posts } = useContext(GlobalContext);
+    const { posts, updatePost, deletePost } = useContext(GlobalContext);
 
     return (
         <>
             {posts.map((post) => (
-                <PostItem key={post.id} post={post}></PostItem>
+                <PostItem key={post.id} post={post} updatePost={updatePost} deletePost={deletePost}></PostItem>
             ))}
         </>
     );

@@ -1,85 +1,63 @@
+// PostItem.tsx
 import {
     Card,
     CardActions,
     CardContent,
     CardHeader,
     CardMedia,
-    Collapse,
-    IconButton,
-    IconButtonProps,
     Typography,
+    TextField,
+    Button
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useContext, useState } from "react";
-import styled from "@emotion/styled";
 import diaryJpg from "../../../assets/images/diary.jpg";
 import Votes from "../Votes/Votes";
 import { Post } from "../../../models/Post";
-import { Link, useNavigate } from "react-router-dom";
 import { GlobalContext } from "../../../contexts/PostsContext";
 import { isToday } from "date-fns";
 import { convertDateToFormat } from "../../../utils/utils";
-import DeleteIcon from '@mui/icons-material/Delete'
-import { PostService } from "../../../services/post/postService";
-import { CustomError } from "../../../utils/customError";
-
-interface ExpandMoreProps extends IconButtonProps {
-    expand: boolean;
+ 
+interface PostItemProps {
+    post: Post;
+    updatePost: (id: string, updatedData: { title: string; body: string }) => void;
+    deletePost: (id: string) => void;
 }
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-})(({ expand }) => ({
-    transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-    marginLeft: "auto",
-}));
-
+ 
 const currentUser = {
     uid: localStorage.getItem('uid') === null ? 0 : parseInt(localStorage.getItem('uid') as string, 10),
     uname: localStorage.getItem('uname') || '' 
 }
 
-export default function PostItem({ post }: { post: Post }) {
-    const { searchDate,updateIsAddedNew, updateLoading, updateNotify } = useContext(GlobalContext);
-    const [expanded, setExpanded] = useState(false);
-    const navigate = useNavigate();
-   
-
-    const handleExpandClick = () => {
-        setExpanded(!expanded);
+export default function PostItem({ post, updatePost, deletePost }: PostItemProps) {
+    const { searchDate } = useContext(GlobalContext);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedTitle, setEditedTitle] = useState(post.title);
+    const [editedBody, setEditedBody] = useState(post.body);
+ 
+    const handleEditClick = () => {
+        setIsEditing(true);
     };
-
-    const handleDelete = (id: string,searchDate : Date) => {      
-       deletePostById(id,convertDateToFormat(searchDate,"MM-dd-yyyy"));
-    }
-   
-    const deletePostById = async (id: string,searchDate:string) => {
-        try {
-            updateLoading(true);
-            const postService = new PostService();
-            postService.deletePostById(id,searchDate);                
-            updateIsAddedNew(true);
-            updateLoading(false);
-            updateNotify({
-                status: "success",
-                message: "Delete post successfully",
-            });
-            navigate("/posts");
-        } catch (error) {
-            let errMsg: string = "Unknow error";
-            if (error instanceof CustomError) {
-                errMsg = error.message;
-            }
-
-            updateLoading(false);
-            updateNotify({
-                status: "error",
-                message: errMsg,
-            });
+ 
+    const handleCancelClick = () => {
+        setIsEditing(false);
+        setEditedTitle(post.title);
+        setEditedBody(post.body);
+    };
+ 
+    const handleSaveClick = () => {
+        updatePost(post.id, {
+            title: editedTitle,
+            body: editedBody
+        });
+        setIsEditing(false);
+    };
+ 
+    const handleDeleteClick = () => {
+        if (window.confirm("Are you sure you want to delete this post?")) {
+            deletePost(post.id);
         }
     };
-
+ 
     return (
         <Card variant="outlined" sx={{ mt: 2, mb: 2 }}>
             <CardHeader              
@@ -89,46 +67,60 @@ export default function PostItem({ post }: { post: Post }) {
                         ? "Today"
                         : convertDateToFormat(new Date(searchDate), "MMMM dd, yyyy")}`
                 }
-                action={
-                    currentUser.uid === post.user.uid ? (
-                        <IconButton onClick={() => handleDelete(post.id, searchDate)} aria-label="delete">
-                            <DeleteIcon />
-                        </IconButton>
-                    ) : null
-                }
-                
-            ></CardHeader>
+            />
             <CardMedia
                 component="img"
                 height="200"
                 image={diaryJpg}
                 alt="Daily diary"
-            ></CardMedia>
+            />
             <CardContent>
-                <Typography color="text.primary">{post.title}</Typography>
-                <CardActions disableSpacing>
-                    <Votes post={post}></Votes>
-                    <ExpandMore
-                        expand={expanded}
-                        onClick={handleExpandClick}
-                        aria-expanded={expanded}
-                        aria-label="show more"
-                    >
-                        <ExpandMoreIcon />
-                    </ExpandMore>
-                </CardActions>
-                <Collapse in={expanded} timeout="auto" unmountOnExit>
-                    <CardContent>
-                        <Typography
-                            color="text.secondary"
-                            paragraph
-                            sx={{ whiteSpace: "pre-wrap" }}
-                        >
+                {isEditing ? (
+                    <>
+                        <TextField
+                            fullWidth
+                            label="Title"
+                            value={editedTitle}
+                            onChange={(e) => setEditedTitle(e.target.value)}
+                            sx={{ mb: 2 }}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Body"
+                            value={editedBody}
+                            onChange={(e) => setEditedBody(e.target.value)}
+                            multiline
+                            rows={4}
+                        />
+                        <Button onClick={handleSaveClick} variant="contained" sx={{ mt: 2, mr: 1 }}>
+                            Save
+                        </Button>
+                        <Button onClick={handleCancelClick} variant="outlined" sx={{ mt: 2 }}>
+                            Cancel
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <Typography color="text.primary">{post.title}</Typography>
+                        <Typography color="text.secondary" paragraph sx={{ whiteSpace: "pre-wrap" }}>
                             {post.body}
                         </Typography>
-                    </CardContent>
-                </Collapse>
+                    </>
+                )}
             </CardContent>
+            <CardActions disableSpacing sx={{ justifyContent: "space-between" }}>
+                <Votes post={post} /> {/* Voting component stays left-aligned */}
+                {!isEditing && currentUser.uid === post.user.uid && (
+                    <div>
+                        <Button onClick={handleEditClick} variant="outlined" sx={{ ml: 2 }}>
+                            Edit
+                        </Button>
+                        <Button onClick={handleDeleteClick} variant="contained" color="error" sx={{ ml: 2 }}>
+                            Delete
+                        </Button>
+                    </div>
+                )}
+            </CardActions>
         </Card>
     );
 }

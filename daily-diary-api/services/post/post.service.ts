@@ -82,7 +82,7 @@ export class PostService {
             }
             return e;
         });
-
+        console.log(this.posts)
         if (!post) {
             errorLogStream.write(`Not found post with id: ${id}\n`);
             throw new CustomError(
@@ -95,4 +95,18 @@ export class PostService {
         return post;
     };
 
+    updatePostById = (id: string, updatedPost: Partial<Post>): Post => {
+        console.log(this.posts)
+
+        const index = this.posts.findIndex((post) => post.id === id);
+        console.log(index)
+        console.log(id)
+        if (index === -1) {
+            throw new CustomError(StatusCodes.NOT_FOUND, `Not found post with id: ${id}`);
+        }
+
+        this.posts[index] = { ...this.posts[index], ...updatedPost };
+        this.persist();
+        return this.posts[index];
+    };
 }

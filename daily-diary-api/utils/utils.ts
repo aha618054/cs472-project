@@ -1,3 +1,18 @@
-export const generateDataFilenameByDate = (date: string): string => {
-    return `Posts_${date}.json`;
+// utils.ts
+export const convertDateToFormat = (date: Date, format: string): string => {
+    const options: Intl.DateTimeFormatOptions = {};
+
+    if (format.includes("MMMM")) options.month = "long";
+    else if (format.includes("MMM")) options.month = "short";
+    else if (format.includes("MM")) options.month = "2-digit";
+
+    if (format.includes("dd")) options.day = "2-digit";
+    if (format.includes("yyyy")) options.year = "numeric";
+
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+};
+
+export const generateDataFilenameByDate = (dateStr: string): string => {
+    const formattedDate = new Date(dateStr).toISOString().split('T')[0];
+    return `${formattedDate}.json`;
 };
