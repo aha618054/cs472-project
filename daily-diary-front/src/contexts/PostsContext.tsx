@@ -8,7 +8,7 @@ type StateType = {
     isVoted: boolean;
     isAddedNew: boolean;
     loading: boolean;
-    notify: Notify;
+    notify: Notify;    
 };
 
 type Notify = {
@@ -22,7 +22,7 @@ const initStateValue = {
     isVoted: false,
     isAddedNew: false,
     loading: false,
-    notify: { status: "success" as AlertColor, message: "" },
+    notify: { status: "success" as AlertColor, message: "" },   
 };
 
 export type ContextType = {
@@ -31,27 +31,26 @@ export type ContextType = {
     isVoted: boolean;
     isAddedNew: boolean;
     loading: boolean;
-    notify: Notify;
-    updatePosts: (posts: Post[]) => void;
-    updateSearchDate: (searchDate: Date) => void;
-    updateIsVoted: (isVoted: boolean) => void;
-    updateIsAddedNew: (isAddedNew: boolean) => void;
-    updateLoading: (loading: boolean) => void;
-    updateNotify: (notify: Notify) => void;
-    updatePost: (id: string, updatedData: { title: string; body: string }) => void;
-    deletePost: (id: string) => void; // Added deletePost type
+    notify: {
+        status: AlertColor;
+        message: string;
+    };  
+    updatePosts: Function;
+    updateSearchDate: Function;
+    updateIsVoted: Function;
+    updateIsAddedNew: Function;
+    updateLoading: Function;
+    updateNotify: Function;   
 };
 
-const initContextValue: ContextType = {
+const initContextValue = {
     ...initStateValue,
-    updatePosts: () => {},
-    updateSearchDate: () => {},
-    updateIsVoted: () => {},
-    updateIsAddedNew: () => {},
-    updateLoading: () => {},
-    updateNotify: () => {},
-    updatePost: () => {},
-    deletePost: () => {}, // Added deletePost initialization
+    updatePosts: (posts: Post[]) => {},
+    updateSearchDate: (searchDate: Date) => {},
+    updateIsVoted: (isVoted: boolean) => {},
+    updateIsAddedNew: (isVoted: boolean) => {},
+    updateLoading: (loading: boolean) => {},
+    updateNotify: (notify: Notify) => {},  
 };
 
 export const GlobalContext = createContext(initContextValue);
@@ -82,68 +81,15 @@ export function PostsContext({ children }: { children: ReactNode }) {
     const updateNotify = (notify: Notify) => {
         setState((prev) => ({ ...prev, notify }));
     };
-
-    // Function to update a post
-    const updatePost = (id: string, updatedData: { title: string; body: string }) => {
-        fetch(`http://localhost:8080/api/posts/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ...updatedData, date: state.searchDate.toISOString().split('T')[0] }),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then((error) => {
-                        console.error("Error response from backend:", error);
-                        throw new Error(`Failed to update the post. Server response: ${error}`);
-                    });
-                }
-                return response.json();
-            })
-            .then((updatedPost: Post) => {
-                setState((prev) => ({
-                    ...prev,
-                    posts: prev.posts.map((post) => (post.id === id ? updatedPost : post)),
-                }));
-                updateNotify({ status: "success", message: "Post updated successfully" });
-            })
-            .catch(error => {
-                console.error("Error updating post:", error);
-                updateNotify({ status: "error", message: error.message || "Failed to update the post" });
-            });
-    };
-
-    // Function to delete a post
-    const deletePost = (id: string) => {
-        fetch(`http://localhost:8080/api/posts/${id}?date=${state.searchDate.toISOString().split('T')[0]}`, {
-            method: "DELETE",
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then((error) => {
-                        console.error("Error response from backend:", error);
-                        throw new Error(`Failed to delete the post. Server response: ${error}`);
-                    });
-                }
-                setState((prev) => ({
-                    ...prev,
-                    posts: prev.posts.filter((post) => post.id !== id),
-                }));
-                updateNotify({ status: "success", message: "Post deleted successfully" });
-            })
-            .catch(error => {
-                console.error("Error deleting post:", error);
-                updateNotify({ status: "error", message: error.message || "Failed to delete the post" });
-            });
-    };
+    
+  
 
     return (
         <GlobalContext.Provider
             value={{
                 posts: state.posts,
                 searchDate: state.searchDate,
-                isVoted: state.isVoted,
+                isVoted: state.isVoted,                
                 isAddedNew: state.isAddedNew,
                 loading: state.loading,
                 notify: state.notify,
@@ -152,9 +98,7 @@ export function PostsContext({ children }: { children: ReactNode }) {
                 updateIsVoted,
                 updateIsAddedNew,
                 updateLoading,
-                updateNotify,
-                updatePost, 
-                deletePost, // Provide the deletePost function in the context
+                updateNotify,            
             }}
         >
             {children}

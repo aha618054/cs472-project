@@ -1,22 +1,18 @@
-import express from "express";
+import express, { json } from "express";
 import {
     addPostHandler,
+    deletePostByIdHandler,
     getAllPostsHandler,
     getPostByIdHandler,
-    updatePostHandler,
-    deletePostHandler,
-    votedPostByIdHandler, // Import the vote handler
+    votePostHandler,
 } from "../../controllers/posts/posts.controller";
 
 const router = express.Router();
 
-router.use(express.json()); // Ensure this if body parsing is needed in routes
-
-router.post("/", addPostHandler);
+router.post("/", json(), addPostHandler);
 router.get("/", getAllPostsHandler);
 router.get("/:id", getPostByIdHandler);
-router.put("/:id", updatePostHandler);
-router.patch("/:id/vote", votedPostByIdHandler); // Added this route for voting
-router.delete("/:id", deletePostHandler);
+router.patch("/:id", json(), votePostHandler);
+router.delete("/delete/:id/:date",json(),deletePostByIdHandler)
 
 export default router;
